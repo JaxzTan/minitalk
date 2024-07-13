@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 14:58:55 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/13 13:13:45 by chtan            ###   ########.fr       */
+/*   Updated: 2024/07/13 14:49:19 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	send_signal(int pid, char *str)
 				kill (pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
-			usleep(1000);
+			usleep(100);
 			bit--;
 		}
 	}

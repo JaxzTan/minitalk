@@ -5,22 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/12 16:06:53 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/12 16:47:00 by chtan            ###   ########.fr       */
+/*   Created: 2024/07/13 13:34:42 by chtan             #+#    #+#             */
+/*   Updated: 2024/07/13 13:38:32 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_BONUS_H
 # define MINITALK_BONUS_H
-
-#include "../libft/libft.h"
 #include <signal.h>
-#include <stdlib.h>
+#include "../libft/libft.h"
 
-//client
-void	message(int num);
-void	send_signal(int pid, char *str);
+// server
+void	config_signals(void);
+void	handle_sigusr(int signum, siginfo_t *info, void *ucontent);
 
-//server
+// client
+void send_signal(int pid, char *str);
+void message(int num);
 
-#endif
+# endif

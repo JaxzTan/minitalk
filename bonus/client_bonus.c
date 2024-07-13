@@ -6,13 +6,13 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:08:08 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/12 16:46:11 by chtan            ###   ########.fr       */
+/*   Updated: 2024/07/13 14:56:33 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
-void send_signal(int pid, char *str)
+void	send_signal(int pid, char *str)
 {
 	int				i;
 	int				bit;
@@ -41,25 +41,23 @@ void send_signal(int pid, char *str)
 	}
 }
 
-void message(int num)
+void	message(int num)
 {
 	(void) num;
 	ft_putstr_fd("message received successful!\n", 1);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	int		pid;
-	char	*str;
+	pid_t	pid;
 
 	if (ac != 3)
 		ft_putstr_fd("wrong input. Try again!", 2);
 	if (ac == 3)
 	{
 		pid = ft_atoi(av[1]);
-		str = av[2];
 		signal(SIGUSR1, message);
-		send_signal(pid ,str);
+		send_signal(pid, av[2]);
 		return (0);
 	}
 }

@@ -6,57 +6,50 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:47:06 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/12 16:49:42 by chtan            ###   ########.fr       */
+/*   Updated: 2024/07/13 14:57:25 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
-void	ft_btoa(int sig, siginfo_t *info, void *context)
+void	handle_sigusr(int signum, siginfo_t *info, void *ucontent)
 {
-	static int				bits;
-	static unsigned char	chr;
+	static int				bit = 7;
+	static unsigned char	c = 0;
 
-	(void)context;
-	chr |= (sig == SIGUSR2);
-	bits++;
-	if (bits == 8)
+	(void)ucontent;
+	if (signum == SIGUSR1)
+		c = c + (1 << bit);
+	else if (signum == SIGUSR2)
+		c = c + (0 << bit);
+	if (bit == 0)
 	{
-		if (chr == 0)
-		{
-			kill(info->si_pid, SIGUSR2);
-			ft_printf("\n");
-		}
-		else
-			ft_printf("%c", chr);
-		bits = 0;
-		chr = 0;
+		if (c == '\0')
+			kill(info->si_pid, SIGUSR1);
+		write(1, &c, 1);
+		c = 0;
+		bit = 7;
 	}
 	else
-		chr <<= 1;
+		bit--;
+}
+
+void	config_signals(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = &handle_sigusr;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 }
 
 int	main(void)
 {
-	struct sigaction	sa;
-
-	sa.sa_sigaction = ft_btoa;
-	sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&sa.sa_mask);
-	ft_printf("%d\n", getpid());
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	ft_printf("Server PID: %d\n", getpid());
+	config_signals();
 	while (1)
-		pause();
+		sleep(1);
 	return (0);
 }
-
-// int main(void)
-// {
-// 	ft_printf("SERVER PID = %d\n", getpid());
-// 	signal(SIGUSR1, handle_signal);
-// 	signal(SIGUSR2, handle_signal);
-// 	while (1)
-// 		sleep(1);
-// 	return (0);
-// }
