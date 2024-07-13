@@ -64,14 +64,14 @@ OBJB = $(SRCB:%.c=%.o)
 OBJ_PRINTF = $(PRINTF:%.c=%.o)
 OBJ_GNL = $(GNL:%.c=%.o)
 
+all: mandatory bonus printf gnl
+	ar -crs $(NAME) $(OBJ) $(OBJB) $(OBJ_PRINTF) $(OBJ_GNL)
+
 printf :
 	$(CC) $(CFLAGS) -c $(PRINTF)
 
 gnl :
 	$(CC) $(CFLAGS) -c $(GNL)
-
-all: mandatory bonus printf gnl
-	ar -crs $(NAME) $(OBJ) $(OBJB) $(OBJ_PRINTF) $(OBJ_GNL)
 
 mandatory :
 	$(CC) $(CFLAGS) -c $(SRC)

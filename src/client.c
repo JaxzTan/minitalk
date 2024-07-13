@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 14:58:55 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/12 16:41:01 by chtan            ###   ########.fr       */
+/*   Updated: 2024/07/13 13:13:45 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	send_signal(int pid, char *str)
 				kill (pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
-			usleep(100);
+			usleep(1000);
 			bit--;
 		}
 	}
@@ -38,15 +38,13 @@ void	send_signal(int pid, char *str)
 int	main(int ac, char **av)
 {
 	int		pid;
-	char	*str;
 
 	if (ac != 3)
 		ft_printf("wrong input. Try again!");
 	if (ac == 3)
 	{
 		pid = ft_atoi(av[1]);
-		str = av[2];
-		send_signal (pid, str);
+		send_signal (pid, av[2]);
 		return (0);
 	}
 }
