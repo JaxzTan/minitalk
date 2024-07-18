@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 14:58:55 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/14 09:15:19 by chtan            ###   ########.fr       */
+/*   Updated: 2024/07/18 12:07:17 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int ac, char **av)
 	int		pid;
 
 	if (ac != 3)
-		ft_printf("wrong input. Try again!");
+		ft_printf("Bad input. Try again!");
 	if (ac == 3)
 	{
 		pid = ft_atoi(av[1]);

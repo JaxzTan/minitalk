@@ -1,7 +1,7 @@
 NAME = Minitalk
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes
+CFLAGS = -Wall -Wextra -Werror -I./libft
 
 SRC_DIR = ./src
 SRC_BONUS_DIR = ./bonus
