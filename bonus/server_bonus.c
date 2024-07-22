@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: qtay <qtay@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/12 16:47:06 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/13 14:57:25 by chtan            ###   ########.fr       */
+/*   Created: 2024/05/02 18:31:56 by qtay              #+#    #+#             */
+/*   Updated: 2024/06/02 16:01:54 by qtay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,3 +53,18 @@ int	main(void)
 		sleep(1);
 	return (0);
 }
+
+/* configure using sa.sa_sigaction because if SA_SIGINFO flag is 
+specified, the signal handler address is passed via the sa_sigaction 
+field instead of sa_handler field
+
+sa_mask: signals to be blocked set to 0
+
+sigaction takes these args: signum, act, old_act;
+
+handle_siguser: the "info" argument is a pointer to siginfo_t, a 
+structure containing further information about the signal:
+info->si_pid sends process ID of client to server
+
+ucontext is a pointer to a struct that contains signal context 
+information that was saved on the user-space stack by the kernel */

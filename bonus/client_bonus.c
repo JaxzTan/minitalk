@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/12 16:08:08 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/18 10:50:30 by chtan            ###   ########.fr       */
+/*   Created: 2024/05/02 18:38:02 by qtay              #+#    #+#             */
+/*   Updated: 2024/07/22 11:09:55 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
-void	send_signal(int pid, char *str)
+void	send_signal(pid_t server_pid, char *str)
 {
 	int				i;
 	int				bit;
@@ -26,38 +26,39 @@ void	send_signal(int pid, char *str)
 		while (bit-- > 0)
 		{
 			if ((c >> bit) & 1)
-				kill (pid, SIGUSR1);
+				kill(server_pid, SIGUSR1);
 			else
-				kill(pid, SIGUSR2);
-			usleep(100);
-		}
-		c = str[i];
-		bit = 8;
-		while (bit-- > 0)
-		{
-			kill(pid, SIGUSR2);
+				kill(server_pid, SIGUSR2);
 			usleep(100);
 		}
 	}
+	c = str[i];
+	bit = 8;
+	while (bit-- > 0)
+	{
+		kill(server_pid, SIGUSR2);
+		usleep(100);
+	}
 }
 
-void	message(int num)
+void	acknowledge_signal(int signum)
 {
-	(void) num;
-	ft_putstr_fd("message received successful!\n", 1);
+	if (signum == SIGUSR1)
+		write(1, "String sucessfully receieved!\n", 30);
 }
 
-int	main(int ac, char **av)
+int	main(int ac, char *av[])
 {
-	pid_t	pid;
+	pid_t	server_pid;
 
 	if (ac != 3)
-		ft_putstr_fd("wrong input. Try again!", 2);
-	if (ac == 3)
+		ft_printf("error: usage: %s <server_pid> <string>\n", av[0]);
+	else if (ac == 3)
 	{
-		pid = ft_atoi(av[1]);
-		signal(SIGUSR1, message);
-		send_signal(pid, av[2]);
+		server_pid = ft_atoi(av[1]);
+		signal(SIGUSR1, acknowledge_signal);
+		send_signal(server_pid, av[2]);
+		// send_signal(server_pid, "\n");
 		return (0);
 	}
 }

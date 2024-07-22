@@ -6,7 +6,7 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:20:15 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/14 10:52:37 by chtan            ###   ########.fr       */
+/*   Updated: 2024/07/21 16:05:58 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ int	main(void)
 	signal(SIGUSR1, handle_signal);
 	signal(SIGUSR2, handle_signal);
 	while (1)
-		sleep(1);
+		pause();
 	return (0);
 }
