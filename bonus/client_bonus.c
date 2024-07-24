@@ -5,60 +5,60 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/02 18:38:02 by qtay              #+#    #+#             */
-/*   Updated: 2024/07/22 11:09:55 by chtan            ###   ########.fr       */
+/*   Created: 2024/07/24 11:05:25 by chtan             #+#    #+#             */
+/*   Updated: 2024/07/24 11:11:47 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
-void	send_signal(pid_t server_pid, char *str)
+void	send_bits(int pid, char c)
 {
-	int				i;
-	int				bit;
-	unsigned char	c;
+	int	bits;
 
-	i = 0;
-	while (str[i])
+	bits = 8;
+	while (bits--)
 	{
-		c = str[i++];
-		bit = 8;
-		while (bit-- > 0)
-		{
-			if ((c >> bit) & 1)
-				kill(server_pid, SIGUSR1);
-			else
-				kill(server_pid, SIGUSR2);
-			usleep(100);
-		}
-	}
-	c = str[i];
-	bit = 8;
-	while (bit-- > 0)
-	{
-		kill(server_pid, SIGUSR2);
+		if (c >> bits & 1)
+			kill(pid, SIGUSR2);
+		else
+			kill(pid, SIGUSR1);
 		usleep(100);
 	}
 }
 
-void	acknowledge_signal(int signum)
+void	ft_atob(int pid, char *str)
 {
-	if (signum == SIGUSR1)
-		write(1, "String sucessfully receieved!\n", 30);
+	int	i;
+
+	i = -1;
+	while (str[++i])
+		send_bits(pid, str[i]);
+	send_bits(pid, '\0');
 }
 
-int	main(int ac, char *av[])
+void	reply_msg(int signal)
 {
-	pid_t	server_pid;
+	(void)signal;
+	ft_printf("Server respond: message sent succesfully!\n");
+}
 
-	if (ac != 3)
-		ft_printf("error: usage: %s <server_pid> <string>\n", av[0]);
-	else if (ac == 3)
+int	main(int argc, char *argv[])
+{
+	int		pid;
+	char	*str;
+
+	if (argc == 3)
 	{
-		server_pid = ft_atoi(av[1]);
-		signal(SIGUSR1, acknowledge_signal);
-		send_signal(server_pid, av[2]);
-		// send_signal(server_pid, "\n");
-		return (0);
+		pid = ft_atoi(argv[1]);
+		str = argv[2];
+		signal(SIGUSR2, reply_msg);
+		ft_atob(pid, str);
 	}
+	else
+	{
+		ft_printf("Error\n");
+		exit(0);
+	}
+	return (0);
 }

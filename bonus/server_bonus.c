@@ -3,54 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qtay <qtay@student.42kl.edu.my>            +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 18:31:56 by qtay              #+#    #+#             */
-/*   Updated: 2024/06/02 16:01:54 by qtay             ###   ########.fr       */
+/*   Updated: 2024/07/24 11:10:50 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
-void	handle_sigusr(int signum, siginfo_t *info, void *ucontent)
+void	ft_btoa(int sig, siginfo_t *info, void *context)
 {
-	static int				bit = 7;
-	static unsigned char	c = 0;
+	static int				bits;
+	static unsigned char	chr;
 
-	(void)ucontent;
-	if (signum == SIGUSR1)
-		c = c + (1 << bit);
-	else if (signum == SIGUSR2)
-		c = c + (0 << bit);
-	if (bit == 0)
+	(void)context;
+	chr |= (sig == SIGUSR2);
+	bits++;
+	if (bits == 8)
 	{
-		if (c == '\0')
-			kill(info->si_pid, SIGUSR1);
-		write(1, &c, 1);
-		c = 0;
-		bit = 7;
+		if (chr == 0)
+		{
+			kill(info->si_pid, SIGUSR2);
+			ft_printf("\n");
+		}
+		else
+			ft_printf("%c", chr);
+		bits = 0;
+		chr = 0;
 	}
 	else
-		bit--;
-}
-
-void	config_signals(void)
-{
-	struct sigaction	sa;
-
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = &handle_sigusr;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+		chr <<= 1;
 }
 
 int	main(void)
 {
-	ft_printf("Server PID: %d\n", getpid());
-	config_signals();
+	struct sigaction	sa;
+
+	sa.sa_sigaction = ft_btoa;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	ft_printf("server pid = %d\n", getpid());
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
-		sleep(1);
+		pause();
 	return (0);
 }
 
