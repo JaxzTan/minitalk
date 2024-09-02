@@ -6,30 +6,30 @@
 /*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 14:58:55 by chtan             #+#    #+#             */
-/*   Updated: 2024/07/22 10:43:02 by chtan            ###   ########.fr       */
+/*   Updated: 2024/09/02 22:46:44 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	send_signal(int pid, char *str)
+void	send_signal(int pid, char *str) // get the server pid to make sure the server received the massege. the str is the massege that i wanna sent
 {
-	int				i;
-	int				bit;
-	unsigned char	c;
+	int				i; // index
+	int				bit;// bit for a character
+	unsigned char	c; // temperory store the character i wanna process
 
 	i = 0;
-	while (str[i])
+	while (str[i])// while loop for each character
 	{
-		c = str[i++];
-		bit = 7;
-		while (bit >= 0)
+		c = str[i++];//specified the char
+		bit = 7;// reset bit
+		while (bit >= 0)//total 8 times
 		{
-			if ((c >> bit) & 1)
-				kill (pid, SIGUSR1);
+			if ((c >> bit) & 1)// check is it 1 in bit
+				kill (pid, SIGUSR1);// send a signal to server through the pid number
 			else
 				kill(pid, SIGUSR2);
-			usleep(100);
+			usleep(100);// delay cause the server only can print the char after getting 8 bits
 			bit--;
 		}
 	}
